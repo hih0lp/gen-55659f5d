@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Главная — Цветочный магазин «Букетная феерия»{% endblock %}
+
+{% block content %}
+    <section class="hero text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Не забудьте порадовать близких</h1>
+            <p class="lead mb-4">Свежие цветы с доставкой за 60 минут. Идеальный букет для любого повода.</p>
+            <a href="#catalog" class="btn btn-primary btn-lg">Выбрать букет <i class="fas fa-arrow-down ms-2"></i></a>
+        </div>
+    </section>
+
+    <section id="catalog" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Наши букеты</h2>
+            <div class="row g-4">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Цветы">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text flex-grow-1">{{ product.description|truncatewords:20 }}</p>
+                                <div class="mt-auto">
+                                    <p class="price">{{ product.price }} ₽</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <i class="fas fa-flower fa-5x text-muted mb-3"></i>
+                        <h4>Пока нет букетов</h4>
+                        <p>Скоро здесь появятся прекрасные композиции!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="order" class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2>Заказ за 60 секунд</h2>
+                    <p class="lead">Заполните форму, и мы доставим свежий букет по указанному адресу в течение часа.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Бесплатная доставка по городу</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Оплата при получении</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Гарантия свежести цветов</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h3 class="text-center mb-4">Оформить заказ</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg mt-3">
+                                    <i class="fas fa-paper-plane me-2"></i>Заказать букет
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
